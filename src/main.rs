@@ -30,7 +30,7 @@ async fn client(
     let head_path = String::from("src/client/");
     let file_name = head_path + &file_name[..];
     let file_path = std::path::Path::new(&*file_name);
-    let Some(Some(file_extension)) = file_path.extension().map(|x| x.to_str()) else {
+    let Some(file_extension) = file_path.extension().and_then(|x| x.to_str()) else {
         return Err(StatusCode::NOT_FOUND);
     };
 
