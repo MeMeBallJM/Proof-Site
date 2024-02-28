@@ -10,4 +10,4 @@ axum = { version = "0.6", features = ["headers"] }
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1", features = ["derive"] }
 tracing = { version = "0.1.40" }
-tracing-subscriber = { version = "0.3", default-features = false }
+tracing-subscriber = { version = "0.3", default-features = true }
