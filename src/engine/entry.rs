@@ -15,7 +15,6 @@ pub struct Entry {
 }
 
 enum EntryError {
-    EmptyEntry,
     IndexNonexistentStatement(usize),
     IndexNonexistentRule(usize),
 }
@@ -23,7 +22,7 @@ enum EntryError {
 use EntryError::*;
 
 impl Entry {
-    fn build_proof(&self) -> Result<Statement, EntryError> {
+    fn build_proof(&self) -> Result<Option<Statement>, EntryError> {
         let mut ledger = self.assumptions.clone();
 
         for (premises_indices, logical_rule_index) in &self.construction {
@@ -42,7 +41,7 @@ impl Entry {
             ledger.push(new_statement);
         }
 
-        ledger.pop().ok_or(EmptyEntry)
+        Ok(ledger.pop())
     }
 }
 
