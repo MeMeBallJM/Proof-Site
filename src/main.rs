@@ -1,9 +1,10 @@
-use axum::{response::Html, routing::get, Router};
+use axum::{routing::get_service, Router};
 use std::net::SocketAddr;
+use tower_http::services::ServeDir;
 
 #[tokio::main]
 async fn main() {
-    let app = Router::new().route("/", get(handler));
+    let app = Router::new().merge(routes_static());
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("listening on {}", addr);
@@ -13,6 +14,6 @@ async fn main() {
         .unwrap();
 }
 
-async fn handler() -> Html<&'static str> {
-    Html("<h1>Hello, World!</h1>")
+fn routes_static() -> Router {
+    Router::new().nest_service("/", get_service(ServeDir::new("./front-end/dist")))
 }
