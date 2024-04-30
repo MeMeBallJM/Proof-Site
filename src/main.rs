@@ -1,24 +1,18 @@
-use axum::response::Html;
-use axum::routing::get;
+use axum::{response::Html, routing::get, Router};
 use std::net::SocketAddr;
-use tracing::{span, Level};
-
-mod utils;
-use utils::data_routing;
 
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::fmt::init();
+    let app = Router::new().route("/", get(handler));
 
-    let app = axum::Router::new().route("/client/:file", get(data_routing::fetch_file));
-
-    let span = span!(Level::INFO, "server");
-    let _enter = span.enter();
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8000));
-    println!("Server started, listening on {addr}");
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    println!("listening on {}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
-        .expect("Failed to start server");
-    drop(_enter);
+        .unwrap();
+}
+
+async fn handler() -> Html<&'static str> {
+    Html("<h1>Hello, World!</h1>")
 }
